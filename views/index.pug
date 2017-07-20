@@ -1,0 +1,24 @@
+extends layout.pug
+  
+//- using block content we tell layout.pug what to include and where.
+block content
+  body
+    .bounds.app--body
+      .app--section--header
+        .grid-33
+          .app--section--heading
+            h2 Timeline
+        .grid-33
+          .app--section--heading
+            strong 129
+            h2 Following
+        .grid-33
+          .app--section--heading
+            h2 Direct Messages
+      //- Include the 3 display columns
+      include timeline.pug
+      include following.pug
+      include messages.pug
+      //- Include the footer bar. This doesn't need to go at the bottom, it can go above the other includes and the css will sort its position out. I'm just placing at the bottom for my own thought process.
+      include footer.pug 
+      
