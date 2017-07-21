@@ -1,16 +1,23 @@
 // This file contains my twitter auth data.
  // Do not upload this file to GitHub.
 
- var Twit = require('twit');
+ //var Twit = require('twit');
 
- var T = new Twit({
+ // var T = new Twit({
+ //   consumer_key:         'qYoW9b6BifJjhfp14t6X8oH5g',
+ //   consumer_secret:      'UDrzNn2Z2DTIJsWw8Whhv0K9hHzjU2Eg1KAiCpqIJeCSh5XmkG',
+ //   access_token:         '938582958-f6tCFfPNAiI6u8OypCRDKHpZncGgwbCLC4cXezOA',
+ //   access_token_secret:  'k60iUoZhQot3IsGKDDt65FCR04dpodyDs8Q7tG1HTZBGr',
+ //   timeout_ms:           60*1000,  // optional HTTP request timeout to apply to all requests.
+ // });
+
+ module.exports = {
    consumer_key:         'qYoW9b6BifJjhfp14t6X8oH5g',
    consumer_secret:      'UDrzNn2Z2DTIJsWw8Whhv0K9hHzjU2Eg1KAiCpqIJeCSh5XmkG',
    access_token:         '938582958-f6tCFfPNAiI6u8OypCRDKHpZncGgwbCLC4cXezOA',
-   access_token_secret:  'k60iUoZhQot3IsGKDDt65FCR04dpodyDs8Q7tG1HTZBGr',
-   timeout_ms:           60*1000,  // optional HTTP request timeout to apply to all requests.
- });
-
+   access_token_secret:  'k60iUoZhQot3IsGKDDt65FCR04dpodyDs8Q7tG1HTZBGr'
+   //timeout_ms:           60*1000,  // optional HTTP request timeout to apply to all requests.
+ };
 
 // INSTRUCTIONS
 
