@@ -18,13 +18,20 @@ var T = new Twit(config); //NOTE i'm hoping this is how to correctly bring in au
 //Timeline Route
 T.get('statuses/user_timeline', {count: 5 },  function (err, data, response) {
   //console.log(data.text);
+
+  // perhaps make a new object just with the bits of data you want to send to pug
+  // send it to pug
+  // an each loop in pug
+
   var timelineTweets = data;
   var text = timelineTweets[0].text; // tweet text
-  console.log(timelineTweets[0].created_at); // timestamp This one is hard. Search slack. Might need some logic to display time or data depending on age of tweet.
+  //console.log(timelineTweets[0].created_at); // timestamp This one is hard. Search slack. Might need some logic to display time or data depending on age of tweet.
+  var created_at = created_at;
   var favouriteCount = timelineTweets[0].favorite_count;
   var name = timelineTweets[0].user.name;
   var screen_name = "@" + timelineTweets[0].user.screen_name;
   var profileImageUrl = timelineTweets[0].user.profile_image_url;
+  console.log(profileImageUrl);
   var retweetCount = timelineTweets[0].retweet_count;
   app.get('/', (req, res) => {
     res.render('index', { // res.render is to 'render' pug template on the specified url, in this case index a.k.a /
@@ -33,14 +40,14 @@ T.get('statuses/user_timeline', {count: 5 },  function (err, data, response) {
       name: name,
       screen_name: screen_name,
       favouriteCount: favouriteCount,
-      profileImageUrl: profileImageUrl
+      profileImageUrl: profileImageUrl,
+      created_at: created_at,
     });
   });
-
 // NOTE When you come back to this on Saturday eve:
   // (1) You've got some data into the timeline. Well done.
     // You're having trouble getting the following working though:
-      // screen_name, profileImageUrl and you've not tried the created_at yet.
+      // profileImageUrl and you've not tried the created_at yet.
         //screen_name is working in the header. But there's something about the way it is set up in timeline that isn't working. Prob an easy fix.
 
   // (2) At the moment you're only logging on the first one (index 0).
