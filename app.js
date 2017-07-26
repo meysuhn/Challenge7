@@ -8,44 +8,110 @@ var moment = require('moment');
 var Twit = require('twit');
 var config = require('./config.js'); // bring in the config file
 var T = new Twit(config); //NOTE i'm hoping this is how to correctly bring in auth data.
-app.use(express.static('public')); // include the static files (things that don't need to be processed on server)
+
+
+var router = express.Router(); // router constructor to create a new router
+  // a router is kind of like a mini app in Express. You can add middleware and routes to it.
+
 app.set('view engine', 'pug'); // set view engine to parameter pug. As result we don't need to 'require' pug.
   // The app.set method defines different settings in Express.
     // The second param just tells Express which template engine to use.
     // By default, Express will look in a folder called Views in the root of your project.
 
+app.use(router);
+app.use(express.static('public')); // include the static files (things that don't need to be processed on server)
 
 
-//Timeline Route
-T.get('statuses/user_timeline', {count: 10 },  function (err, data, response) {
-  let timelineTweets = data;
+app.use((req, res, next) => {
+  T.get('statuses/user_timeline', {count: 10 },  function (err, data, response) {
+    //let timelineTweets = data;
+    //var screen_name = "@" + timelineTweets[0].user.screen_name; // this is for the header.
+    //var profileImageUrl1 = timelineTweets[0].user.profile_image_url;
+    //console.log(moment([2007, 0, 29]).fromNow()); // 4 years ago
+    //var created0 = timelineTweets[3].created_at;
+    res.timeline = data; // pass follower data down to next method
+    next();
+    });
+});
+
+
+app.use((req, res, next) => {
+  T.get('followers/list', {count: 5 },  function (err, data, response) {
+    //let followers = data.users;
+    //res.render('index', {followers}); //render the index.pug file here and send it to the browser.
+    //response.followers = data.users;
+    res.followers = data.users; // pass follower data down to next method
+    next();
+    });
+});
+
+app.use((req, res, next) => {
+  T.get('direct_messages', {count: 5 },  function (err, data, response) {
+    //let messages = data;
+    // console.log(res.followers);
+    //console.log(messages[1].text);
+    //res.render('index', {messages}); // res.render is to 'render' pug template on the specified url, in this case index a.k.a /
+    res.messages = data;
+    next();
+    });
+});
+
+
+app.get('/', (req, res) => {
+  headerData = res.headerData;
+  timelineTweets = res.timeline;
+  followers = res.followers;
+  messages = res.messages;
   var screen_name = "@" + timelineTweets[0].user.screen_name; // this is for the header.
   var profileImageUrl1 = timelineTweets[0].user.profile_image_url;
-  //console.log(moment([2007, 0, 29]).fromNow()); // 4 years ago
-  var created0 = timelineTweets[3].created_at;
-
-
-  var twitterTimeStamp = (moment(created0, 'dd MMM DD HH:mm:ss ZZ YYYY', 'en'));
-  //console.log(twitterTimeStamp);
-  // console.log(moment().from(twitterTimeStamp, 'true'));
-  // console.log(moment().diff(twitterTimeStamp, 'true'));
-
-  // if (et <= x) // seconds
-  //  // display 'just now'
-  //  else if (et <= x) // minute
-  //   // minutes ago
-
-
-
-  console.log(profileImageUrl1);
-  app.get('/', (req, res) => {
-    res.render('index', { // res.render is to 'render' pug template on the specified url, in this case index a.k.a /
-    timelineTweets,
-      screen_name: screen_name, // this is for the header.
-        // NOTE I think you need a separate route for this and the following count
-    });
-  });
+  var followerCount = timelineTweets[0].user.friends_count;
+  //console.log(followerCount);
+  console.log(followers);
+ res.render('index', {followerCount, screen_name, timelineTweets, followers, messages});
 });
+
+
+
+
+
+
+// Method one is nice when you have some sort of API and want to accept different methods for the same route / page.
+    // Method 1
+    // router.route('/hello')
+    //     .get(function (req, res, next) { ... })
+    //     .post(function (req, res, next) { ... });
+
+
+// //Timeline Route
+// T.get('statuses/user_timeline', {count: 10 },  function (err, data, response) {
+//   let timelineTweets = data;
+//   var screen_name = "@" + timelineTweets[0].user.screen_name; // this is for the header.
+//   var profileImageUrl1 = timelineTweets[0].user.profile_image_url;
+//   //console.log(moment([2007, 0, 29]).fromNow()); // 4 years ago
+//   var created0 = timelineTweets[3].created_at;
+//
+//
+//   var twitterTimeStamp = (moment(created0, 'dd MMM DD HH:mm:ss ZZ YYYY', 'en'));
+//   //console.log(twitterTimeStamp);
+//   // console.log(moment().from(twitterTimeStamp, 'true'));
+//   // console.log(moment().diff(twitterTimeStamp, 'true'));
+//
+//   // if (et <= x) // seconds
+//   //  // display 'just now'
+//   //  else if (et <= x) // minute
+//   //   // minutes ago
+//
+//
+//
+//
+//   app.get('/', (req, res) => {
+//     res.render('index', { // res.render is to 'render' pug template on the specified url, in this case index a.k.a /
+//     timelineTweets,
+//       screen_name: screen_name, // this is for the header.
+//         // NOTE I think you need a separate route for this and the following count
+//     });
+//   });
+// });
 
 
 // //Followers Route
@@ -73,7 +139,7 @@ T.get('statuses/user_timeline', {count: 10 },  function (err, data, response) {
 
 
 // The code below does actualy send a tweet!
-T.post('statuses/update', { status: 'API test' });
+//T.post('statuses/update', { status: 'API test' });
   // This to go in the footer and the value needs to come from the input
 
 

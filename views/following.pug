@@ -3,17 +3,18 @@
   .app--section
     ul.app--user--list
       
-      //- each val, index in followers
-      //-   - var followerName = followers[index].name
-      //-   - var followerScreen_name = "@"+followers[index].screen_name
-      //-   
-      //-   li
-      //-     .circle--fluid
-      //-       .circle--fluid--cell.circle--fluid--primary
-      //-         a.app--tweet--author
-      //-           .app--avatar(style='background-image: url(images/f-spore.png)')
-      //-             img(src='images/f-spore.png')
-      //-           h4=followerName
-      //-           p=followerScreen_name
-      //-       .circle--fluid--cell
-      //-         a.button.button-text Unfollow
+      each val, index in followers
+        - var followerName = followers[index].name
+        - var followerScreen_name = "@"+followers[index].screen_name
+        - var followerImage = followers[index].profile_image_url
+        
+        li
+          .circle--fluid
+            .circle--fluid--cell.circle--fluid--primary
+              a.app--tweet--author
+                .app--avatar(style='background-image: url(' + followerImage + ')')
+                  img(src=followerImage)
+                h4=followerName
+                p=followerScreen_name
+            .circle--fluid--cell
+              a.button.button-text Unfollow

@@ -5,7 +5,7 @@
   .app--section
     ul.app--tweet--list
       
-      //- The keys after the dot are the twitter json keys, not your vars so be careful not to change them.
+      //-The keys after the dot are the twitter json keys, not your vars so be careful not to change them.
       each val, index in timelineTweets
         - var timelineRetweetCount = timelineTweets[index].retweet_count
         - var timelineName = timelineTweets[index].user.name
