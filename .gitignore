@@ -1,4 +1,7 @@
 .DS_Store
 .sass-cache
-config
+config.js
 node_modules/
+spare_copies/
+notes
+*Challenge 7 Plan.txt

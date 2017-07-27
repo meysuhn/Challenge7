@@ -8,11 +8,16 @@ var moment = require('moment');
 var Twit = require('twit');
 var config = require('./config.js'); // bring in the config file
 var T = new Twit(config); //NOTE i'm hoping this is how to correctly bring in auth data.
+const bodyParser = require('body-parser');
+//const path = require('path'); // Not sure if this is necessary
 
+//NOTE not quitue sure if this is necessary? It's for the tweet bit
+app.use(bodyParser.urlencoded({ extended: false}));
 
 var router = express.Router(); // router constructor to create a new router
   // a router is kind of like a mini app in Express. You can add middleware and routes to it.
 
+//app.set('views', path.join(__dirname, 'views')); // Not sure if this is necessary
 app.set('view engine', 'pug'); // set view engine to parameter pug. As result we don't need to 'require' pug.
   // The app.set method defines different settings in Express.
     // The second param just tells Express which template engine to use.
@@ -21,76 +26,7 @@ app.set('view engine', 'pug'); // set view engine to parameter pug. As result we
 app.use(router);
 app.use(express.static('public')); // include the static files (things that don't need to be processed on server)
 
-
-app.use((req, res, next) => {
-  T.get('statuses/user_timeline', {count: 10 },  function (err, data, response) {
-    //let timelineTweets = data;
-    //var screen_name = "@" + timelineTweets[0].user.screen_name; // this is for the header.
-    //var profileImageUrl1 = timelineTweets[0].user.profile_image_url;
-    //console.log(moment([2007, 0, 29]).fromNow()); // 4 years ago
-    //var created0 = timelineTweets[3].created_at;
-    res.timeline = data; // pass follower data down to next method
-    next();
-    });
-});
-
-
-app.use((req, res, next) => {
-  T.get('followers/list', {count: 5 },  function (err, data, response) {
-    //let followers = data.users;
-    //res.render('index', {followers}); //render the index.pug file here and send it to the browser.
-    //response.followers = data.users;
-    res.followers = data.users; // pass follower data down to next method
-    next();
-    });
-});
-
-app.use((req, res, next) => {
-  T.get('direct_messages', {count: 5 },  function (err, data, response) {
-    //let messages = data;
-    // console.log(res.followers);
-    //console.log(messages[1].text);
-    //res.render('index', {messages}); // res.render is to 'render' pug template on the specified url, in this case index a.k.a /
-    res.messages = data;
-    next();
-    });
-});
-
-
-app.get('/', (req, res) => {
-  headerData = res.headerData;
-  timelineTweets = res.timeline;
-  followers = res.followers;
-  messages = res.messages;
-  var screen_name = "@" + timelineTweets[0].user.screen_name; // this is for the header.
-  var profileImageUrl1 = timelineTweets[0].user.profile_image_url;
-  var followerCount = timelineTweets[0].user.friends_count;
-  //console.log(followerCount);
-  console.log(followers);
- res.render('index', {followerCount, screen_name, timelineTweets, followers, messages});
-});
-
-
-
-
-
-
-// Method one is nice when you have some sort of API and want to accept different methods for the same route / page.
-    // Method 1
-    // router.route('/hello')
-    //     .get(function (req, res, next) { ... })
-    //     .post(function (req, res, next) { ... });
-
-
-// //Timeline Route
-// T.get('statuses/user_timeline', {count: 10 },  function (err, data, response) {
-//   let timelineTweets = data;
-//   var screen_name = "@" + timelineTweets[0].user.screen_name; // this is for the header.
-//   var profileImageUrl1 = timelineTweets[0].user.profile_image_url;
-//   //console.log(moment([2007, 0, 29]).fromNow()); // 4 years ago
-//   var created0 = timelineTweets[3].created_at;
-//
-//
+// Moment Stuff
 //   var twitterTimeStamp = (moment(created0, 'dd MMM DD HH:mm:ss ZZ YYYY', 'en'));
 //   //console.log(twitterTimeStamp);
 //   // console.log(moment().from(twitterTimeStamp, 'true'));
@@ -100,79 +36,82 @@ app.get('/', (req, res) => {
 //   //  // display 'just now'
 //   //  else if (et <= x) // minute
 //   //   // minutes ago
-//
-//
-//
-//
-//   app.get('/', (req, res) => {
-//     res.render('index', { // res.render is to 'render' pug template on the specified url, in this case index a.k.a /
-//     timelineTweets,
-//       screen_name: screen_name, // this is for the header.
-//         // NOTE I think you need a separate route for this and the following count
-//     });
-//   });
-// });
 
 
-// //Followers Route
-// T.get('followers/list', {count: 5 },  function (err, data, response) {
-//   let followers = data.users;
-//   //console.log(followers[0].name);
-//   //console.log(followers[0].screen_name);
-//   app.get('/', (req, res) => {
-//     //console.log(followers);
-//     res.render('index', {followers} // res.render is to 'render' pug template on the specified url, in this case index a.k.a /
-//     );
-//   });
-// });
-//
-// //Messages Route
-// T.get('direct_messages', {count: 5 },  function (err, data, response) {
-//   let messages = data;
-//   // console.log(messages[1].text);
-//   app.get('/', (req, res) => {
-//     console.log(messages[1].text);
-//     res.render('index', {messages} // res.render is to 'render' pug template on the specified url, in this case index a.k.a /
-//     );
-//   });
-// });
+
+// Timeline Route
+app.use((req, res, next) => {
+  T.get('statuses/user_timeline', {count: 10 },  function (err, data, response) {
+    //console.log(moment([2007, 0, 29]).fromNow()); // 4 years ago
+    //var created0 = timelineTweets[3].created_at;
+    res.timeline = data; // pass follower data down to next method
+    next(err); // an app will hang if middleware is not closed out with next()
+    });
+});
+
+// Following Route
+app.use((req, res, next) => {
+  T.get('friends/list', {count: 5 },  function (err, data, response) {
+    res.following = data.users; // pass follower data down to next method
+    next(err);
+    });
+});
+
+// Messages Route
+app.use((req, res, next) => {
+  T.get('direct_messages', {count: 5 },  function (err, data, response) {
+    res.messages = data;
+    next(err);
+    });
+});
 
 
-// The code below does actualy send a tweet!
-//T.post('statuses/update', { status: 'API test' });
-  // This to go in the footer and the value needs to come from the input
+
+app.post('/',(req, res, next) => {
+  let userTweet = req.body.userTweet;
+  console.log(userTweet);
+  // The code below does actualy send a tweet. Comment out during dev!
+  //T.post('statuses/update', { status: userTweet });
+  res.render('index');
+  // NOTE This doesn't feel quite right. for example, meysuhn is lost in the header after a twitter post.
+});
 
 
-// In the Express vids Andrew got some user input, the name. So mimic that!
 
+
+
+
+
+
+
+app.get('/', (req, res) => {
+  //headerData = res.headerData;
+  timelineTweets = res.timeline;
+  following = res.following;
+  messages = res.messages;
+  var screen_name = "@" + timelineTweets[0].user.screen_name; // this is for the header.
+  var profileImageUrl1 = timelineTweets[0].user.profile_image_url;
+  var followerCount = timelineTweets[0].user.friends_count;
+  var banner = timelineTweets[0].user.profile_banner_url;
+  var banner2 = timelineTweets[0].user.profile_background_image_url_https;
+  //console.log(timelineTweets);
+  // console.log(banner);
+  // console.log(banner2);
+  //console.log(following);
+ res.render('index', {banner, followerCount, screen_name, timelineTweets, following, messages});
+});
+
+
+
+
+
+
+app.use((err, req, res, next) => {
+  res.locals.error = err;
+  res.render('error'); // send the error template to the client
+});
 
 app.listen(3000, () => { // Element 3/3 of a basic Express App
     console.log('The application is running on localhost:3000!'); // this shows in the terminal, not the browser console.
 }); // this sets up the local development server on port 3000
-  // the listen method can take an optional callback parameter, which is what we've done here.
-
-
-
-
-
-
-
-
-// Notes
-// twit knows which Twitter user to get because of the config file
-
-//.pug file extension not required. As view engine is already set to pug express knows to search for pug files
-// Logging JSON data to the console (in a node app that means the terminal)
-
-// This code will create a server, and when I run it, the server will run on my machine.
-
-// const express = require('express'); // Element 1/3 of a basic Express App
-
-// const app = express(); // Element 2/3 of a basic Express App
-    // the express function returns an express application
-    // the app variable is now the central part of our application
-
-// app.listen(3000, () => { // Element 3/3 of a basic Express App
-    // console.log('The application is running on localhost:3000!');
-// }); // this sets up the local development server on port 3000
   // the listen method can take an optional callback parameter, which is what we've done here.
