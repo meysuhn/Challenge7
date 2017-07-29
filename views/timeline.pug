@@ -14,8 +14,11 @@
         - var timelineFavouriteCount = timelineTweets[index].favorite_count
         - var timelineScreen_name = "@"+timelineTweets[index].user.screen_name
         - var profileImageUrl = timelineTweets[index].user.profile_image_url
+        - var time = timelineTweets[index].tweetTime
+        //- var timelineTime = put some if else in here to work out time.
+        
         li
-          strong.app--tweet--timestamp=created_at
+          strong.app--tweet--timestamp=time
           a.app--tweet--author
             .app--avatar(style='background-image: url(' + profileImageUrl + ')')
               img(src=profileImageUrl)

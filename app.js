@@ -9,7 +9,16 @@ var Twit = require('twit');
 var config = require('./config.js'); // bring in the config file
 var T = new Twit(config); //NOTE i'm hoping this is how to correctly bring in auth data.
 const bodyParser = require('body-parser');
+var server = require('http').createServer(app);
+
+
+// var io = require('socket.io')(server);
+// io.on('connection', function(){ /* … */ });
+
+
 //const path = require('path'); // Not sure if this is necessary
+app.locals.moment = require('moment'); // This allows moment to be used within a jade template
+  // NOTE could do with understanding express locals better
 
 //NOTE not quitue sure if this is necessary? It's for the tweet bit
 app.use(bodyParser.urlencoded({ extended: false}));
@@ -26,24 +35,47 @@ app.set('view engine', 'pug'); // set view engine to parameter pug. As result we
 app.use(router);
 app.use(express.static('public')); // include the static files (things that don't need to be processed on server)
 
-// Moment Stuff
-//   var twitterTimeStamp = (moment(created0, 'dd MMM DD HH:mm:ss ZZ YYYY', 'en'));
-//   //console.log(twitterTimeStamp);
-//   // console.log(moment().from(twitterTimeStamp, 'true'));
-//   // console.log(moment().diff(twitterTimeStamp, 'true'));
-//
-//   // if (et <= x) // seconds
-//   //  // display 'just now'
-//   //  else if (et <= x) // minute
-//   //   // minutes ago
-
-
 
 // Timeline Route
 app.use((req, res, next) => {
   T.get('statuses/user_timeline', {count: 10 },  function (err, data, response) {
-    //console.log(moment([2007, 0, 29]).fromNow()); // 4 years ago
-    //var created0 = timelineTweets[3].created_at;
+
+    for (var i = 0, len = data.length; i < len; i++) {
+
+      var currentDateTime = moment();
+      //console.log(currentDateTime);
+      var tweetAPITime = data[i].created_at; // When the tweet was created
+      var twitterTimeStamp = (moment(tweetAPITime, 'dd MMM DD HH:mm:ss ZZ YYYY', 'en')); // convert to Moment format
+      var a = moment(currentDateTime); // time now
+      var b = moment(twitterTimeStamp); // tweet time
+      var et = a.diff(b, 'seconds');
+      //console.log("ET = " +et);
+      let tweetTime = '';
+      // some of the above can probably be refactored.
+
+      if (et <= 10) {
+        tweetTime = "Just Now";
+      } else if (et <= 59) {
+        tweetTime = et + "s"; // seconds
+      } else if (et>=60&&et<3600) { //if greater than 60 seconds & less than one hour
+        tweetTime = Math.round(et/60) + "m"; // minutes
+      } else if (et>=3600&&et<86400) {
+        tweetTime = Math.round(et/3600) + "h"; // hours
+      } else if (et >= 86400&&et<31536000){ // amount of seconds in one common calendar year.
+          //NOTE this wouldn't be good enough for preoduction code. Doesn't take into account leap years
+        tweetTime = moment(twitterTimeStamp).format("MMM DD"); // date within the last year
+      } else {
+        tweetTime = moment(twitterTimeStamp).format("DD MMM YYYY"); // date over a year ago
+      }
+      //console.log(tweetTime);
+
+      data[i].tweetTime = tweetTime;
+
+    }
+    //console.log(data);
+    //   // NOTE NOTE NOTE just add the value to the objects on res.timeline as part of the loop process?
+
+
     res.timeline = data; // pass follower data down to next method
     next(err); // an app will hang if middleware is not closed out with next()
     });
@@ -61,6 +93,8 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
   T.get('direct_messages', {count: 5 },  function (err, data, response) {
     res.messages = data;
+    //console.log("The Beast! " +moment(moment(res.messages[0].created_at, 'dd MMM DD HH:mm:ss ZZ YYYY', 'en')).fromNow()); // this is perfect for the message bit
+
     next(err);
     });
 });
@@ -79,13 +113,7 @@ app.post('/',(req, res, next) => {
 
 
 
-
-
-
-
-
 app.get('/', (req, res) => {
-  //headerData = res.headerData;
   timelineTweets = res.timeline;
   following = res.following;
   messages = res.messages;
@@ -93,16 +121,9 @@ app.get('/', (req, res) => {
   var profileImageUrl1 = timelineTweets[0].user.profile_image_url;
   var followerCount = timelineTweets[0].user.friends_count;
   var banner = timelineTweets[0].user.profile_banner_url;
-  var banner2 = timelineTweets[0].user.profile_background_image_url_https;
-  //console.log(timelineTweets);
-  // console.log(banner);
-  // console.log(banner2);
-  //console.log(following);
+  var time =
  res.render('index', {banner, followerCount, screen_name, timelineTweets, following, messages});
 });
-
-
-
 
 
 
@@ -111,7 +132,7 @@ app.use((err, req, res, next) => {
   res.render('error'); // send the error template to the client
 });
 
-app.listen(3000, () => { // Element 3/3 of a basic Express App
+server.listen(3000, () => { // Element 3/3 of a basic Express App
     console.log('The application is running on localhost:3000!'); // this shows in the terminal, not the browser console.
 }); // this sets up the local development server on port 3000
   // the listen method can take an optional callback parameter, which is what we've done here.

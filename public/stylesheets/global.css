@@ -2226,6 +2226,26 @@ body {
   -o-transition: box-shadow 0.2s;
   transition: box-shadow 0.2s;
 }
+
+/* CM - This is for the header profile pic */
+.header--avatar {
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 34px;
+  height: 34px;
+  float: left;
+  margin: -3px 1px -3px 0;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1) inset;
+  -webkit-transition: box-shadow 0.2s;
+  -moz-transition: box-shadow 0.2s;
+  -ms-transition: box-shadow 0.2s;
+  -o-transition: box-shadow 0.2s;
+  transition: box-shadow 0.2s;
+}
+
+
 /* line 87, ../sass/global.sass */
 a:hover .app--avatar {
   box-shadow: 0 0 0 4px #1da1f2 inset;
