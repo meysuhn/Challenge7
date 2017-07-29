@@ -38,20 +38,16 @@ app.use(express.static('public')); // include the static files (things that don'
 
 // Timeline Route
 app.use((req, res, next) => {
-  T.get('statuses/user_timeline', {count: 10 },  function (err, data, response) {
+  T.get('statuses/user_timeline', {count: 5 },  function (err, data, response) {
 
+    // Create the time/date of the tweet.
+      //adds a key/value pair to the tweet objects in the data array
+      // Twitter provides created_at time in seconds since the tweet.
     for (var i = 0, len = data.length; i < len; i++) {
-
-      var currentDateTime = moment();
-      //console.log(currentDateTime);
-      var tweetAPITime = data[i].created_at; // When the tweet was created
-      var twitterTimeStamp = (moment(tweetAPITime, 'dd MMM DD HH:mm:ss ZZ YYYY', 'en')); // convert to Moment format
-      var a = moment(currentDateTime); // time now
-      var b = moment(twitterTimeStamp); // tweet time
-      var et = a.diff(b, 'seconds');
-      //console.log("ET = " +et);
+      var tweetTimeStamp = (moment(data[i].created_at, 'dd MMM DD HH:mm:ss ZZ YYYY', 'en')); // convert 'created_at' seconds since to Moment date format
+      var timeNow = moment(); // get the current date
+      var et = timeNow.diff(tweetTimeStamp, 'seconds'); // Calculate Elapsed Time in seconds between now and tweet
       let tweetTime = '';
-      // some of the above can probably be refactored.
 
       if (et <= 10) {
         tweetTime = "Just Now";
@@ -63,19 +59,12 @@ app.use((req, res, next) => {
         tweetTime = Math.round(et/3600) + "h"; // hours
       } else if (et >= 86400&&et<31536000){ // amount of seconds in one common calendar year.
           //NOTE this wouldn't be good enough for preoduction code. Doesn't take into account leap years
-        tweetTime = moment(twitterTimeStamp).format("MMM DD"); // date within the last year
+        tweetTime = moment(tweetTimeStamp).format("MMM DD"); // date within the last year
       } else {
-        tweetTime = moment(twitterTimeStamp).format("DD MMM YYYY"); // date over a year ago
+        tweetTime = moment(tweetTimeStamp).format("DD MMM YYYY"); // date over a year ago
       }
-      //console.log(tweetTime);
-
-      data[i].tweetTime = tweetTime;
-
+      data[i].tweetTime = tweetTime; // add the new key / value pair to their respective object
     }
-    //console.log(data);
-    //   // NOTE NOTE NOTE just add the value to the objects on res.timeline as part of the loop process?
-
-
     res.timeline = data; // pass follower data down to next method
     next(err); // an app will hang if middleware is not closed out with next()
     });
