@@ -8,7 +8,9 @@ I can post a tweet that shows up on twitter.com, but when I refresh my app’s p
 
 I’d like to finish off by adding in the auto refresh functionality, but need to fix up this error first.
 
-(2) Error Handler
+(2) adding in socket.io functionality
+
+(3) Error Handler
 I’ve got the error handler working in part, but when I try to add a generic 500 status code, as shown in the Express vids, it’s breaking with the terminal message `TypeError: Cannot set property 'status' of undefined` & the browser saying `This site can’t be reached`. 
 
 I’ve tried implementing the error handler as shown in the Express vids, as below below:
@@ -24,7 +26,5 @@ app.use((err, req, res, next) => {
   res.locals.error = err;
   res.status(err.status); // <— Bug related code 2/2
   res.render('error');
-});```
+});
 
-
-(3) adding in socket.io functionality
