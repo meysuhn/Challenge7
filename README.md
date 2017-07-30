@@ -1,7 +1,7 @@
 # Challenge7
 TH TechDegree Challenge 7
 
-This is nearly completed, 3 just 3 outstanding issues:
+This is nearly completed; just 3 outstanding issues:
 
 (1) Posting a Tweet
 I can post a tweet that shows up on twitter.com, but when I refresh my app’s page in the browser one of two things will happen: either I get a straight up stack trace saying that certain data is undefined, or the page will render most of the app, but without the header. I think this is something to do with the way I’ve got the routing arranged, but I haven’t been able to resolve it.
