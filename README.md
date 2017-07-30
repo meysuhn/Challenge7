@@ -18,9 +18,9 @@ I’ve tried implementing the error handler as shown in the Express vids, as bel
     err.status = 500; // <— Bug related code 1/2
     next(err);
     });
-});```
+});
 
-```app.use((err, req, res, next) => {
+app.use((err, req, res, next) => {
   res.locals.error = err;
   res.status(err.status); // <— Bug related code 2/2
   res.render('error');
