@@ -33,7 +33,7 @@ app.get('/', (req, res) => {
 // Custom error handler
 app.use((err, req, res, next) => {
   res.locals.error = err; // 'err' is an object that holds data about the error.
-  //res.status(err.status); // <— Bug causing code 2/2
+  err.status = 500; // <— Bug causing code 2/2
   res.render('error'); // send the error template to the client
 });
 
