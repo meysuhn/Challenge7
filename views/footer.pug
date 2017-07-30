@@ -1,8 +1,10 @@
+- var headerPhoto = timelineTweets[0].user.profile_image_url
+
 .app--tweet
   form(action='/', method='post')
     .circle--fluid
       .circle--fluid--cell.circle--fluid--primary.align-bottom.app--tweet--post
-        .app--avatar(style='background-image: url(images/m-spore.png)')
+        .app--avatar(style='background-image: url(' + headerPhoto + ')')
           img(src='images/m-spore.png')
         textarea#tweet-textarea.circle--textarea--input(name='userTweet', placeholder="What's happening?")
         strong#tweet-char.app--tweet--char 140

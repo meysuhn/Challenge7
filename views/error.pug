@@ -1,7 +1,10 @@
 extends layout
 
 block content
-  h1= error.message
-  h2= error.status
-  pre= error.stack
+  h1="Sorry, Computer Says 'No'!"
+    p="Have you tried turning it off and on again?..."
+    p="ERROR MESSAGE: " +error.message
+    p="ERROR STATUS: " +error.status
+    p="Stack Trace:"
+  pre=error.stack
   
