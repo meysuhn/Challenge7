@@ -6,7 +6,8 @@ const moment = require('moment');
 const Twit = require('twit');
 const bodyParser = require('body-parser');
 const server = require('http').createServer(app);
-app.locals.moment = require('moment'); // This allows moment to be used within a jade template
+app.locals.moment = require('moment');
+app.locals.socket = require('socket.io'); // This allows moment to be used within a jade template
 app.use(bodyParser.urlencoded({ extended: false})); //NOTE not quitue sure if this is necessary? It's for the tweet bit
 const router = express.Router(); // router constructor to create a new router
 app.use(router);
@@ -15,8 +16,8 @@ app.use(express.static('public')); // include the static files (things that don'
 const routes = require('./routes'); // Bring in the routes folder. Because it's named 'index' we don't need to refer to it.
 app.use(routes); // use the routes variable I declared to make middleware
 
-
-
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 
 
 app.get('/', (req, res) => {
@@ -32,7 +33,9 @@ app.get('/', (req, res) => {
  //next(err); // Can't have next(err) here for this reason https://stackoverflow.com/questions/34983520/express-js-routing-error-cant-set-headers-after-they-are-sent
 });
 
-
+// io.on('connection', function(socket){
+//   console.log('a user connected');
+// });
 
 // Custom error handler
 app.use((err, req, res, next) => {
@@ -41,6 +44,6 @@ app.use((err, req, res, next) => {
   res.render('error'); // send the error template to the client
 });
 
-server.listen(3000, () => { // Element 3/3 of a basic Express App
+http.listen(3000, () => { // Element 3/3 of a basic Express App
     console.log('The application is running on localhost:3000!'); // this shows in the terminal, not the browser console.
 }); // this sets up the local development server on port 3000
