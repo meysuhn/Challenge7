@@ -16,6 +16,9 @@ const routes = require('./routes'); // Bring in the routes folder. Because it's 
 app.use(routes); // use the routes variable I declared to make middleware
 
 
+
+
+
 app.get('/', (req, res) => {
   timelineTweets = res.timeline;
   following = res.following;
@@ -24,10 +27,11 @@ app.get('/', (req, res) => {
   let profileImageUrl1 = timelineTweets[0].user.profile_image_url;
   let followerCount = timelineTweets[0].user.friends_count;
   let banner = timelineTweets[0].user.profile_banner_url;
-  let time =
- res.render('index', {banner, followerCount, screen_name, timelineTweets, following, messages});
+  //let time =
+  res.render('index', {banner, followerCount, screen_name, timelineTweets, following, messages});
  //next(err); // Can't have next(err) here for this reason https://stackoverflow.com/questions/34983520/express-js-routing-error-cant-set-headers-after-they-are-sent
 });
+
 
 
 // Custom error handler

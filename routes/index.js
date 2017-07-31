@@ -65,7 +65,8 @@ router.post('/', (req, res, next) => {
 	T.post('statuses/update', {
 		status: userTweet
 	}); // send tweet to Twitter via Twit
-	res.render('index');
+	//renderIndexPage();
+	res.redirect('/'); // redirect back to the index screen after sending a tweet
 	// NOTE This doesn't feel quite right. for example, meysuhn is lost in the header after a twitter post.
 });
 
