@@ -1,9 +1,10 @@
 # Twitter Interface API
 TreeHouse TechDegree Challenge 7
+Chris Mason Aug 2017
 
 ## Setup
 
-Insert your own twitter credentials to the `example-config.js` file, and lastly change the filename to `config.js`.
+Insert your own twitter credentials to the `example-config.js` file and change the filename to `config.js`.
 
 ## Running the App
 
