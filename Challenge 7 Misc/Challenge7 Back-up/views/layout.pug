@@ -1,0 +1,31 @@
+//- the layout file should include everything that my templates have in common (this makes updating things across the app much easier later)
+doctype html
+head
+  //
+    Basic Page Needs
+    ––––––––––––––––––––––––––––––––––––––––––––––––––
+  meta(charset='utf-8')
+  title Chris' Twitter Client
+  meta(name='description', content='')
+  meta(name='author', content='')
+  //
+    Mobile Specific Metas
+    ––––––––––––––––––––––––––––––––––––––––––––––––––
+  meta(name='viewport', content='width=device-width, initial-scale=1')
+  //
+    FONTS
+    ––––––––––––––––––––––––––––––––––––––––––––––––––
+  link(rel='stylesheet', href='/stylesheets/global.css')
+  //-link(rel='stylesheet', href='/stylesheets/circle/core/docs.css')  
+    //- When I include this css file then the styling goes a bit wonky.
+  //
+    CSS
+    ––––––––––––––––––––––––––––––––––––––––––––––––––
+  link(rel='stylesheet', href='css/global.css')
+body
+  include includes/header.pug 
+  
+      //- include (i.e. display) the header pug file below the head file
+      //- 'main' is the block where our content is placed
+
+//- extends & includes need to go with blocks. 

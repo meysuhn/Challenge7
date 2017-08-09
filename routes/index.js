@@ -1,24 +1,39 @@
 /*jshint esversion: 6 */
+/* jshint node: true */
+
+/////////////////////////////////////
+// Chris Mason
+// TreeHouse TechDegree Challenge 7
+/////////////////////////////////////
+
+'use strict';
+
+/////////////////////////////////////
+// Require app's packages
 const express = require('express');
 const router = express.Router();
 const Twit = require('twit');
 const config = require('../config.js'); // bring in the config file
 const T = new Twit(config); // Bring in auth data. This has to be declared AFTER requiring the config file in order for it to work!
 const moment = require('moment');
+/////////////////////////////////////
 
 
-
-var stream = T.stream('user', {with: 'user'});
-
-stream.on('tweet', function (tweet) {
-  console.log(tweet);
-});
+/////////////////////////////////////
+// Socket attempt - not working
+// var stream = T.stream('user', {with: 'user'});
+//
+// stream.on('tweet', function (tweet) {
+//   console.log(tweet);
+// });
 
 
 
 // Timeline Route
 router.use((req, res, next) => {
-	T.get('statuses/user_timeline', {count: 5}, function(err, data, response) {
+	T.get('statuses/user_timeline', {
+    count: 5 // return only 5 most recent
+  }, function(err, data, response) {
 		// Create the time/date of the tweet. Adds a key/value pair to the tweet objects in the data array
 		for (let i = 0, len = data.length; i < len; i++) {
 			let tweetTimeStamp = (moment(data[i].created_at, 'dd MMM DD HH:mm:ss ZZ YYYY', 'en')); // convert 'created_at' seconds since to Moment date format
@@ -49,7 +64,7 @@ router.use((req, res, next) => {
 // Following Route
 router.use((req, res, next) => {
 	T.get('friends/list', {
-		count: 5
+		count: 5 // return only 5 most recent
 	}, function(err, data, response) {
 		res.following = data.users; // pass follower data down to next method
 		//err.status = 500; // <— Bug causing code 1/2
@@ -60,7 +75,7 @@ router.use((req, res, next) => {
 // Messages Route
 router.use((req, res, next) => {
 	T.get('direct_messages', {
-		count: 5
+		count: 5 // return only 5 most recent
 	}, function(err, data, response) {
 		res.messages = data;
 		next(err);

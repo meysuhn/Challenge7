@@ -1,0 +1,35 @@
+extends app
+  //- extend the app pug file
+
+//- declare the card block
+block card
+  section(class=`flashcards`)
+    .card(class=`card-${side}`)
+      .card-header
+      h1.card-title= side
+      #content
+        h2= text //- the variable name for the card template is text.
+        if hint
+          p.hint
+            i= hint
+      .card-flip-wrap
+        a(href=`${id}?side=${sideToShow}`)
+          //- For the href, the parts of the URL that will change from card to card is the id and the sideToShow
+            //- assign a template literal to the href and add those values in for interpolation.
+          img.card-flip(src='/static/img/flip.svg')
+      .card-next
+        a(href='/cards')
+          img(src="/static/img/next.svg")
+    script(src='/static/js/app.js')
+  
+  //- Pug Notes
+  //- extends joins up the pug files.
+  //- the 'block content' tells pug where to insert the various parts.  
+    
+  //- 'if' adds logic to pug. If there is a hint value then add the tag below, else don't add the tag.
+
+  //-    i Hint: #{hint} 
+  //-         //- This is the pub version of a js template literal, but with a # instead of $
+  //-         //- The HTML <i> element represents a range of text that is set off from the normal text for some reason, for example, technical terms, foreign language phrases, or fictional character thoughts. It is typically displayed in italic type.
+  //-     //- else  // You can have else logic too
+  //-       p (There is no hint.)

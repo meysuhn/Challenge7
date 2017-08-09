@@ -4,17 +4,12 @@
   "description": "TH TechDegree Challenge 7",
   "main": "app.js",
   "dependencies": {
-    "body-parser": "^1.17.2",
     "express": "^4.15.3",
-    "moment": "^2.18.1",
-    "moment-twitter": "^0.2.0",
     "pug": "^2.0.0-rc.2",
-    "socket.io": "^2.0.3",
     "twit": "^2.2.9"
   },
   "devDependencies": {},
   "scripts": {
-    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Chris Mason",
