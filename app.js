@@ -27,7 +27,7 @@ app.locals.socket = require('socket.io'); // This allows moment to be used withi
 /////////////////////////////////////
 // Set up the middleware used in the app
 app.use(bodyParser.urlencoded({ extended: false})); //NOTE not quite sure if this is necessary? It's for the tweet bit
-app.use(router);
+app.use(router); // a router is kind of like a mini app in Express. You can add middleware and routes to it.
 app.use(routes); // use the routes variable I declared to make middleware
 app.use(express.static('public')); // include the static files (things that don't need to be processed on server)
 
