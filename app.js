@@ -38,8 +38,21 @@ app.set('view engine', 'pug'); // set view engine to parameter pug. As result we
 
 
 /////////////////////////////////////
-// const io = require('socket.io')(http);
-// Socket attempt - not working
+// Socket attempt
+// I haven't used The server (app.js) exactly as is on https://openclassrooms.com/courses/ultra-fast-applications-using-node-js/socket-io-let-s-go-to-real-time
+
+//
+const io = require('socket.io')(http);
+
+// When a client connects, we note it in the console
+io.sockets.on('connection', function (socket) {
+    console.log('A client is connected!');
+});
+
+io.sockets.on('connection', function (socket) {
+        //socket.emit('message', 'You are connected!');
+});
+
 // io.on('connection', function (socket) {
 //   socket.emit('news', { hello: 'world' });
 //   socket.on('my other event', function (data) {
