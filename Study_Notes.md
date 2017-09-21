@@ -27,3 +27,6 @@ There are three elements to a basic Express App:
 The app.set method defines different settings in Express.
   The second param just tells Express which template engine to use.
   By default, Express will look in a folder called Views in the root of your project.
+
+## Don’t confuse WebSocket with AJAX! 
+  AJAX does indeed allow for the client and the server to exchange information without reloading the page. However, in AJAX, it’s always the client that asks and the server that responds. The server can’t decide for itself to send information to the client. With WebSocket that has become possible!

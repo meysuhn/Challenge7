@@ -21,11 +21,3 @@ block content
       include messages.pug
       //- Include the footer bar. This doesn't need to go at the bottom, it can go above the other includes and the css will sort its position out. I'm just placing at the bottom for my own thought process.
       include footer.pug
-      //-try putting the below in the head instead?
-      script.
-  var socket = io.connect('http://localhost:3000');
-  socket.on('message1', function(message) {
-  alert('The server has a message for you: ' + message);
-  })
-  
-  //- the problem is above where message has been changed to message1. I think it's a pug problem where message appears in messages.pug. Change this and alter css to test this theory.
