@@ -9,3 +9,8 @@ Insert your own twitter credentials to the `example-config.js` file and change t
 ## Running the App
 
 Run `npm start` in the CLI and visit `localhost:3000` in the browser.
+
+
+![](screenshot.png)
+
+
